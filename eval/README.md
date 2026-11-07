@@ -5,8 +5,22 @@ chapter rules are present as project instructions.
 
 | Run       | Instructions                         | Output dir                    |
 |-----------|--------------------------------------|-------------------------------|
-| baseline  | `task.md` only                       | `runs/<date>/baseline/`       |
-| ch01      | `rules/01.md` + task   | `runs/<date>/ch01/`           |
+| baseline  | task only                            | `runs/<date>/baseline/`       |
+| ch01      | `rules/01.md` + task                 | `runs/<date>/ch01/`           |
+
+## Task history
+
+There is one `task.md`. It changes over time and git keeps the versions.
+Every `REPORT.md` records the commit of the task it ran, and reports
+against different task commits are not comparable.
+
+- `44cf97a`: three core requirements only. Neutral, no pressure. Measures
+  whether a rule is followed at all.
+- current: the three plus six requirements that each invite an
+  anti-pattern (scale with a context budget, an in-progress indicator, a
+  Stop button that keeps partial output, memory priority under the budget,
+  multimodal uploads, erasure on request). Measures whether a rule holds
+  when a requirement pushes against it, and what it costs.
 
 ## Controls
 

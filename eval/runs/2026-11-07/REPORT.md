@@ -1,5 +1,7 @@
 # Run 2026-11-07 · chapter 1 · chat schema with unified long-term memory
 
+Task: `eval/task.md` at commit `44cf97a` (three core requirements, no pressure).
+
 Three runs per arm. Same model, same task prompt, fresh agents, repository
 reads forbidden. The ch01 arm had `rules/01.md` prepended as project rules.
 Directories: `baseline`, `baseline-2`, `baseline-3`, `ch01`, `ch01-2`, `ch01-3`.
