@@ -18,16 +18,16 @@ Drop this into CLAUDE.md, .cursorrules, or a system prompt. Apply it to every ba
 ## Keep raw and derived apart
 
 5. A value is derived only if the exact same value can be recomputed from raw records, such as a total or a score computed by code. Store it as a derived value that can be dropped and rebuilt; it is never source of truth. Anything that cannot be recomputed exactly is a fact: a judgement a person made (a user set the priority, a reviewer approved), a model's output, a provider's answer. Record it raw with who or what produced it and when; for a model or provider, also the inputs it was given and its version.
-6. Every derived record stores the keys of the raw records it came from, as fields a lookup can follow, never as a comment: one key, a list of keys, or the range that covers them (a period, a stream offset range). If a raw record can change, also store the version it was derived from. Where the store can enforce the reference, as a foreign key does, let it.
-7. Keep raw and derived in separate tables. Derivation never updates or deletes anything in a raw table. Raw records of events are append-only; when the requirement asks only for current state, the raw record holding it may be updated in place.
+6. Every derived record stores the keys of the raw records it came from, as fields a lookup can follow, never as a comment: one key, a list of keys, or the range that covers them (a period, a stream offset range). Where the store can enforce the reference, as a foreign key does, let it.
+7. Keep raw and derived in separate tables. Raw records are never updated or deleted: a change, including a correction, is a new record.
 8. Every derived table can be dropped and rebuilt entirely from the tables it was derived from. Derivation runs one way, from raw toward derived: never derive a table from one that was derived from it.
-9. Never delete or compress raw records because a derivation of them exists.
+9. Track state by appending one record per change: an event for a lifecycle step, a new version for an edited attribute. Number each entity's records with a unique sequence so two concurrent changes cannot both apply. The current state is derived from them; when it is stored, it is a derived table updated in the same operation. Constantly changing values that nobody needs the history of (rate-limit counters, last seen) are not raw records; keep them in a cache.
 
 ## Three layers, nothing else
 
 10. A backend's code has exactly three layers: core, operations, workflows. Do not add a fourth and do not rename these.
 11. Core talks to infrastructure and knows nothing about the business. It knows the schema, but every business value (a threshold, a time window, which statuses count) arrives as a parameter: selecting invoices due before a date is core; deciding which date makes an invoice overdue is the operation's job. One function does one atomic thing: run one query, call one endpoint, read one cache key, publish one event. It has no opinion about why it is called.
-12. Operations compose core calls into one business action with one name: upsert a user, load a conversation with its context, call provider A and then provider B with its answer. Business rules and domain validation are applied here, and transactions live here.
+12. Operations compose core calls into one business action with one name: register a user, load a conversation with its context, call provider A and then provider B with its answer. Business rules and domain validation are applied here, and transactions live here.
 13. Workflows sequence operations into one complete use case. For one chat turn: load context, generate the reply, save both messages, update the profile. They decide order, branching, and what happens on failure. They contain no infrastructure calls and no rules about what a record may contain; those belong to operations.
 14. Core functions are named after what they do to the infrastructure (insert row, post request, get key). Operations and workflows are named after the business action (save exchange, handle turn). If a name does not fit its layer's vocabulary, the code is in the wrong layer.
 
@@ -58,7 +58,7 @@ Drop this into CLAUDE.md, .cursorrules, or a system prompt. Apply it to every ba
 ## Placing new code
 
 27. To place a piece of code, ask in order: does it talk to infrastructure (core)? Does it call core under one business name (operation)? Does it sequence business actions into a use case (workflow)? Does it translate a transport (entry point)? If none of these, it must be pure, and it goes in lib or types.
-28. Data work is placed the same way. Writing a raw or derived record is an operation. Rebuilding a derived table from its sources is a workflow. A derivation rule that needs no I/O is a helper.
+28. Data work is placed the same way. Appending a raw record or writing a derived record is an operation. Rebuilding a derived table from its sources is a workflow. A derivation rule that needs no I/O is a helper.
 
 A layout that satisfies every rule above:
 
