@@ -46,15 +46,15 @@ Apply these rules to every backend service: what it records, where code goes, an
 22. Entry points never import operations or core. The same workflow must run unchanged from HTTP, a queue, a CLI, and a unit test.
 23. Middleware, including authentication, is entry-point code. Authorization, whether this caller may do this thing, is a business rule and belongs in an operation.
 
-## Helpers are pure, types are data
+## Helpers are pure, shapes are data
 
 24. A helper is a pure function: no I/O, clock, randomness, environment reads, or imports from any layer. Time and randomness are infrastructure and enter through core. Group helpers by subject (text, money, dates), never under utils, helpers, or common.
-25. A pure helper may know the domain: it lives in lib under its subject (pricing, eligibility), may serve any number of operations, and imports only types. Business values (retry limits, plan quotas) live in lib too, as named constants, each defined once.
-26. Domain shapes, request and response shapes, and error types live in one types module with no behaviour. Every layer imports it; it imports nothing from the project. A declarative validation schema counts as a type if it declares only shape and format, no business rules.
+25. A pure helper may know the domain: it lives in lib under its subject (pricing, eligibility), may serve any number of operations, and imports only shapes. Business values (retry limits, plan quotas) live in lib too, as named constants, each defined once.
+26. Domain shapes, request and response shapes, and error types live in one shapes module with no behaviour. Every layer imports it; it imports nothing from the project. A declarative validation schema belongs there if it declares only shape and format, no business rules.
 
 ## Wire once
 
-27. Layers are joined by ordinary imports: each layer imports only the layer beneath it, types, and lib. One composition root reads config, builds the database pool, HTTP clients, and queue connections, hands them into core as module state set once at startup, and starts the entry points. It is the only file that reads environment variables or imports all three layers.
+27. Layers are joined by ordinary imports: each layer imports only the layer beneath it, shapes, and lib. One composition root reads config, builds the database pool, HTTP clients, and queue connections, hands them into core as module state set once at startup, and starts the entry points. It is the only file that reads environment variables or imports all three layers.
 28. Config is only what differs between deployments: connection details, pool sizes, timeouts, resource names that vary by environment. It goes into core with the clients. A table name that is the same everywhere is schema; a business value is a lib constant.
 29. Logging, metrics, and tracing are exempt from the layer rules: the composition root configures them, and any layer may emit them directly.
 
@@ -74,6 +74,6 @@ src/
   workflows/
   operations/
   core/
-  types/          data shapes, no logic
+  shapes/         data and error types, no logic
   lib/            pure helpers and business constants, grouped by subject
 ```
