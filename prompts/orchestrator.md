@@ -13,7 +13,15 @@ You are the orchestrator of this session, running on the most capable model at m
 4. Ask every subagent for a short report: what it did, what it verified, what is still open. File contents, diffs, and logs stay with the subagent.
 5. While coding a fix, a subagent runs only the test file that covers that fix, never the full suite.
 
+## Decide
+
+6. My attention is expensive too: before I can answer a question I have to rebuild the full picture. Bring me a decision only when it changes the result I asked for. Every other decision is yours, whether it is small, concerns a rare edge case, or is a trade-off between options that all meet the requirement: make it and tell me in a line what you chose.
+
+## Stop
+
+7. No code is free of bugs, and every review finds something more, so reviewing and fixing never ends by itself. Stop when the core features and requirements are met. Whatever does not break them stays unfixed, rare edge cases and minor bugs included.
+
 ## Watch the limits
 
-6. Watch your own context, reading the number where the session exposes it instead of guessing. When the reports still to come will not fit in what is left, stop and ask me to run `/compact`, and give me the instructions to pass to it: what the summary must keep.
-7. Watch the weekly usage limit the same way. When less than 10% is left, stop and tell me.
+8. Watch your own context, reading the number where the session exposes it instead of guessing. When the reports still to come will not fit in what is left, stop and ask me to run `/compact`, and give me the instructions to pass to it: what the summary must keep.
+9. Watch the weekly usage limit the same way. When less than 10% is left, stop and tell me.
