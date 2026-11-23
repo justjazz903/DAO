@@ -29,4 +29,3 @@ You are the orchestrator of this session, running on the most capable model at m
 ## Watch the limits
 
 10. **Watch your own context**, reading the number where the session exposes it instead of guessing. When the reports still to come will not fit in what is left, stop and ask me to run `/compact`, and give me the instructions to pass to it: what the summary must keep.
-11. **Watch the weekly usage limit the same way.** When less than 10% is left, stop and tell me.
